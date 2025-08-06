@@ -1,0 +1,25 @@
+include_guard(GLOBAL)
+
+function(hashlib_generate_single_header)
+    file(READ ${PROJECT_BINARY_DIR}/parts/doctest_fwd.h fwd)
+    file(READ ${PROJECT_BINARY_DIR}/parts/doctest.cpp impl)
+
+    set(OUTPUT_FILE "${PROJECT_BINARY_DIR}/hashlib.hpp")
+    file(WRITE ${OUTPUT_FILE} "#pragma once\n")
+
+    file(APPEND ${OUTPUT_FILE} "${fwd}\n")
+    file(APPEND ${OUTPUT_FILE} "#ifndef DOCTEST_SINGLE_HEADER\n")
+    file(APPEND ${OUTPUT_FILE} "#define DOCTEST_SINGLE_HEADER\n")
+    file(APPEND ${OUTPUT_FILE} "#endif // DOCTEST_SINGLE_HEADER\n")
+    file(APPEND ${OUTPUT_FILE} "\n${impl}")
+endfunction()
+
+function(hashlib_generate_cxx20_module)
+    set(OUTPUT_FILE "${PROJECT_BINARY_DIR}/hashlib.cppm")
+    file(WRITE ${OUTPUT_FILE} "module;\n#define HASHLIB_BUILD_MODULE\nexport module hashlib;\nexport import std;\n")
+    set(HEADERS config.hpp core.hpp md5.hpp)
+    foreach(HEADER IN LISTS HEADERS)
+        file(READ "${PROJECT_SOURCE_DIR}/include/hashlib/${HEADER}" _CONTENT)
+        file(APPEND ${OUTPUT_FILE} "${_CONTENT}\n")
+    endforeach()
+endfunction()
