@@ -7,15 +7,15 @@ project(
     LANGUAGES CXX
 )
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 11)
 
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/permissive->")
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/Zc:preprocessor>")
 
-option(HASHLIB_TESTS "enable tests for hashlib" OFF)
-option(HASHLIB_BUILD_SINGLE_HEADER "build hashlib single header" OFF)
-option(HASHLIB_BUILD_MODULE "build hashlib cxx20 module" OFF)
+option(HASHLIB_TESTS "enable tests for hashlib" ON)
+option(HASHLIB_BUILD_SINGLE_HEADER "generate hashlib single header" OFF)
+option(HASHLIB_BUILD_MODULE "generate hashlib cxx20 module" OFF)
 
 include(CMakePackageConfigHelpers)
 include(cmake/helpers.cmake)
