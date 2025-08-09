@@ -1,4 +1,4 @@
-#ifndef HASHLIB_BUILD_MODULE
+#ifndef HASHLIB_ALL_IN_ONE
 #pragma once
 #ifdef __has_include
 #if __has_include(<version>)
