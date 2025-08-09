@@ -10,14 +10,14 @@ TEST_CASE("testing sha384") {
     }
 
     SUBCASE("basic string") {
-        sha384.update("hello world"s);
+        sha384.update("hello world"_s);
         CHECK_EQ(sha384.hexdigest(), "fdbd8e75a67f29f701a4e040385e2e23986303ea10239211af907fcbb83578b3e417cb71ce646efd0819dd8c088de1bd");
     }
 
     SUBCASE("multiple updates") {
-        sha384.update("The"s);
-        sha384.update(" quick "s);
-        sha384.update("brown fox"s);
+        sha384.update("The"_s);
+        sha384.update(" quick "_s);
+        sha384.update("brown fox"_s);
         CHECK_EQ(sha384.hexdigest(), "2e45933dd1a1e6a6928a732d58abeb180c225e5e7b99c64eb6f233a7b99ee4635c17f44ca544cf620cf4289deb4c08cf");
     }
 

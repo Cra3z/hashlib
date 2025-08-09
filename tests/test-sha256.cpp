@@ -10,14 +10,14 @@ TEST_CASE("testing sha256") {
     }
 
     SUBCASE("basic string") {
-        sha256.update("hello world"s);
+        sha256.update("hello world"_s);
         CHECK_EQ(sha256.hexdigest(), "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9");
     }
 
     SUBCASE("multiple updates") {
-        sha256.update("hello"s);
-        sha256.update(" "s);
-        sha256.update("world"s);
+        sha256.update("hello"_s);
+        sha256.update(" "_s);
+        sha256.update("world"_s);
         CHECK_EQ(sha256.hexdigest(), "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9");
     }
 

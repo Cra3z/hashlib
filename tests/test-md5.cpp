@@ -10,14 +10,14 @@ TEST_CASE("testing md5") {
     }
 
     SUBCASE("basic string") {
-        md5.update("hello world"s);
+        md5.update("hello world"_s);
         CHECK_EQ(md5.hexdigest(), "5eb63bbbe01eeed093cb22bb8f5acdc3");
     }
 
     SUBCASE("multiple updates") {
-        md5.update("hello"s);
-        md5.update(" "s);
-        md5.update("world"s);
+        md5.update("hello"_s);
+        md5.update(" "_s);
+        md5.update("world"_s);
         CHECK_EQ(md5.hexdigest(), "5eb63bbbe01eeed093cb22bb8f5acdc3");
     }
 

@@ -20,6 +20,9 @@
 
 namespace hashlib {
     namespace detail {
+        template<bool C>
+        using bool_constant = std::integral_constant<bool, C>;
+
         template<bool C, typename T = void>
         using enable_if_t = typename std::enable_if<C, T>::type;
 
@@ -74,7 +77,7 @@ namespace hashlib {
         struct disjunction<B1, Bn...> : conditional_t<bool(B1::value), B1, disjunction<Bn...>>  {};
 
         template<typename B>
-        struct negation : std::bool_constant<!bool(B::value)> {};
+        struct negation : bool_constant<!bool(B::value)> {};
 
         template<typename T, typename U>
         using is_derived_from = conjunction<std::is_base_of<U, T>, std::is_convertible<T*, U*>>;
@@ -84,6 +87,30 @@ namespace hashlib {
 
         template<typename T>
         using iter_value_t = remove_cvref_t<iter_reference_t<T>>;
+
+#ifndef __cpp_lib_nonmember_container_access
+        template<typename C>
+        HASHLIB_CXX17_CONSTEXPR auto data(C& c) -> decltype(c.data()) {
+            return c.data();
+        }
+
+        template<typename C>
+        HASHLIB_CXX17_CONSTEXPR auto data(const C& c) -> decltype(c.data()) {
+            return c.data();
+        }
+
+        template<typename T, std::size_t N>
+        HASHLIB_CXX17_CONSTEXPR auto data(T(&array)[N]) noexcept -> T* {
+            return array;
+        }
+
+        template<typename E>
+        HASHLIB_CXX17_CONSTEXPR auto data(std::initializer_list<E> il) noexcept -> const E* {
+            return il.begin();
+        }
+#else
+        using std::data;
+#endif
 
         template<typename T>
         using iter_cat_t = typename std::iterator_traits<T>::iterator_category;
@@ -128,7 +155,7 @@ namespace hashlib {
         struct is_contiguous_range_impl<T, enable_if_t<
             is_range_impl<T, std::random_access_iterator_tag>::value &&
             std::is_same<
-                decltype(std::data(std::declval<T&>())),
+                decltype(detail::data(std::declval<T&>())),
                 add_pointer_t<iter_reference_t<range_iter_t<T>>>
             >::value
         >> : std::true_type {};
@@ -256,9 +283,9 @@ namespace hashlib {
             std::is_same<detail::range_value_t<Range>, value_type>::value &&
             !detail::is_span<detail::remove_cvref_t<Range>>::value &&
             !detail::is_std_array<detail::remove_cvref_t<Range>>::value &&
-            std::is_convertible<decltype(std::data(std::declval<Range&>())), pointer>::value
+            std::is_convertible<decltype(detail::data(std::declval<Range&>())), pointer>::value
         >* = nullptr>
-        HASHLIB_CXX17_CONSTEXPR span(Range& rng): span(std::data(rng), std::distance(std::begin(rng), std::end(rng))) {}
+        HASHLIB_CXX17_CONSTEXPR span(Range& rng): span(detail::data(rng), std::distance(std::begin(rng), std::end(rng))) {}
 
         HASHLIB_CXX17_CONSTEXPR span(const span& other) noexcept = default;
 

@@ -10,14 +10,14 @@ TEST_CASE("testing sha224") {
     }
 
     SUBCASE("basic string") {
-        sha224.update("hello world"s);
+        sha224.update("hello world"_s);
         CHECK_EQ(sha224.hexdigest(), "2f05477fc24bb4faefd86517156dafdecec45b8ad3cf2522a563582b");
     }
 
     SUBCASE("multiple updates") {
-        sha224.update("The quick brown fox "s);
-        sha224.update("jumps over "s);
-        sha224.update("the lazy dog"s);
+        sha224.update("The quick brown fox "_s);
+        sha224.update("jumps over "_s);
+        sha224.update("the lazy dog"_s);
         CHECK_EQ(sha224.hexdigest(), "730e109bd7a8a32b1cb9d9a09aa2325d2430587ddbc0c38bad911525");
     }
 

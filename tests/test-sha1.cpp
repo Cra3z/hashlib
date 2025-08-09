@@ -10,14 +10,14 @@ TEST_CASE("testing sha1") {
     }
 
     SUBCASE("basic string") {
-        sha1.update("hello world"s);
+        sha1.update("hello world"_s);
         CHECK_EQ(sha1.hexdigest(), "2aae6c35c94fcfb415dbe95f408b9ce91ee846ed");
     }
 
     SUBCASE("multiple updates") {
-        sha1.update("hello"s);
-        sha1.update(" "s);
-        sha1.update("world"s);
+        sha1.update("hello"_s);
+        sha1.update(" "_s);
+        sha1.update("world"_s);
         CHECK_EQ(sha1.hexdigest(), "2aae6c35c94fcfb415dbe95f408b9ce91ee846ed");
     }
 
