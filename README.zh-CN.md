@@ -25,7 +25,7 @@ find_package(hashlib REQUIRED)
 target_link_libraries(<your-target> hashlib::hashlib)
 ```
 
-#### 单一头文件
+#### 单个头文件
 你也可以生成一个包含了 `include/hashlib` 目录下所有头文件的单一头文件 `hashlib.hpp`, 详见 [生成单个头文件](#生成单个头文件).
 
 ### 使用 C++20 模块

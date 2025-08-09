@@ -66,7 +66,7 @@ cmake --install <your-build-dir> --prefix <your-install-dir>
 #### Generate single header
 using the following command, the single header `hashlib.hpp` which combines all headers in the directory `include/hashlib` will be generated in your build directory.
 ```shell
-cmake -S . -B <your-build-dir> -HASHLIB_BUILD_SINGLE_HEADER=ON
+cmake -S . -B <your-build-dir> -DHASHLIB_BUILD_SINGLE_HEADER=ON
 ```
 
 #### Generate C++20 module
