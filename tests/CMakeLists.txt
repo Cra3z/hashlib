@@ -1,3 +1,5 @@
+include(doctest/doctest.cmake)
+
 file(GLOB EXAMPLE_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/test-*.cpp")
 
 foreach(EXAMPLE_FILE ${EXAMPLE_FILES})
@@ -7,6 +9,8 @@ foreach(EXAMPLE_FILE ${EXAMPLE_FILES})
         ${EXAMPLE_FILE_NAME}
         ${EXAMPLE_FILE}
     )
+
+    doctest_discover_tests(${EXAMPLE_FILE_NAME})
 
     target_link_libraries(
         ${EXAMPLE_FILE_NAME}
