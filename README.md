@@ -2,7 +2,6 @@
 # hashlib
 
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-blue)]()
 [![Language](https://img.shields.io/badge/Language-C%2B%2B11-blue.svg)]()
 
 `Cra3z' hashlib` is a C++11 header-only hash algorithm library which like Python's hashlib.
