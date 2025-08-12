@@ -72,7 +72,6 @@ namespace hashlib {
                 std::size_t padding_size = (buffer_size < 56) ? (56 - buffer_size) : (120 - buffer_size);
                 update({padding, padding_size});
                 std::uint64_t bits = total_size * 8;
-                // 使用大端序填充长度
                 for (std::size_t i = 0; i < 8; ++i) {
                     padding[7 - i] = bits & 0xff;
                     bits >>= 8;
@@ -93,7 +92,7 @@ namespace hashlib {
             }
 
         private:
-            void process_block_(const byte* block) noexcept {
+            auto process_block_(const byte* block) noexcept -> void {
                 static constexpr std::uint32_t k[64] = {
                     0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
                     0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
@@ -115,7 +114,6 @@ namespace hashlib {
 
                 std::uint32_t w[64];
 
-                // 使用大端序读取
                 for (std::size_t i = 0; i < 16; ++i) {
                     w[i] = (std::uint32_t(block[i * 4]) << 24) |
                            (std::uint32_t(block[i * 4 + 1]) << 16) |
@@ -123,7 +121,6 @@ namespace hashlib {
                            (std::uint32_t(block[i * 4 + 3]));
                 }
 
-                // 消息调度
                 for (std::size_t i = 16; i < 64; ++i) {
                     const auto s0 = rotr32(w[i-15], 7) ^ rotr32(w[i-15], 18) ^ (w[i-15] >> 3);
                     const auto s1 = rotr32(w[i-2], 17) ^ rotr32(w[i-2], 19) ^ (w[i-2] >> 10);
@@ -133,7 +130,6 @@ namespace hashlib {
                 auto a = h_[0], b = h_[1], c = h_[2], d = h_[3],
                      e = h_[4], f = h_[5], g = h_[6], h = h_[7];
 
-                // 压缩函数主循环
                 for (std::size_t i = 0; i < 64; ++i) {
                     const auto S1 = rotr32(e, 6) ^ rotr32(e, 11) ^ rotr32(e, 25);
                     const auto ch = (e & f) ^ ((~e) & g);
@@ -163,7 +159,7 @@ namespace hashlib {
             }
 
             HASHLIB_ALWAYS_INLINE
-            static constexpr std::uint32_t rotr32(std::uint32_t x, int n) noexcept {
+            static constexpr auto rotr32(std::uint32_t x, int n) noexcept -> std::uint32_t {
                 return (x >> n) | (x << (32 - n));
             }
 

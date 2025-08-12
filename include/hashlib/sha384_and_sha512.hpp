@@ -104,7 +104,7 @@ namespace hashlib {
             }
 
         private:
-            void process_block_(const byte* block) noexcept {
+            auto process_block_(const byte* block) noexcept -> void {
                 static constexpr std::uint64_t k[80] = {
                     0x428a2f98d728ae22ull, 0x7137449123ef65cdull, 0xb5c0fbcfec4d3b2full, 0xe9b5dba58189dbbcull,
                     0x3956c25bf348b538ull, 0x59f111f1b605d019ull, 0x923f82a4af194f9bull, 0xab1c5ed5da6d8118ull,
@@ -179,7 +179,7 @@ namespace hashlib {
             }
 
             HASHLIB_ALWAYS_INLINE
-            static constexpr std::uint64_t rotr64(std::uint64_t x, int n) noexcept {
+            static constexpr auto rotr64(std::uint64_t x, int n) noexcept -> std::uint64_t {
                 return (x >> n) | (x << (64 - n));
             }
 

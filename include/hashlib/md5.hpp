@@ -89,7 +89,7 @@ namespace hashlib {
             }
 
         private:
-            void process_block_(const byte* block) noexcept {
+            auto process_block_(const byte* block) noexcept -> void {
                 static constexpr std::uint32_t K[64]{
                     0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
                     0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
@@ -150,7 +150,7 @@ namespace hashlib {
             }
 
             HASHLIB_ALWAYS_INLINE
-            HASHLIB_CXX17_CONSTEXPR static std::uint32_t byte4_to_uint32_(const byte* bytes) noexcept {
+            HASHLIB_CXX17_CONSTEXPR static auto byte4_to_uint32_(const byte* bytes) noexcept -> std::uint32_t {
                 return std::uint32_t(bytes[0]) | (std::uint32_t(bytes[1]) << 8) |
                     (std::uint32_t(bytes[2]) << 16) | (std::uint32_t(bytes[3]) << 24);
             }

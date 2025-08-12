@@ -7,7 +7,7 @@ namespace hashlib {
     namespace detail {
         class sha1 {
         public:
-            static constexpr std::size_t digest_size = 20; // bytes
+            static constexpr std::size_t digest_size = 20;
 
         public:
             sha1() noexcept : h_{0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0} {}
@@ -144,7 +144,7 @@ namespace hashlib {
             }
 
             HASHLIB_ALWAYS_INLINE
-            static constexpr std::uint32_t rotl32(std::uint32_t x, int n) noexcept {
+            static constexpr auto rotl32(std::uint32_t x, int n) noexcept -> std::uint32_t {
                 return (x << n) | (x >> (32 - n));
             }
 
