@@ -18,7 +18,7 @@ supported algorithms:
 
 ### Using headers
 hashlib is a header-only library, so you can simply copy the headers in the directory `include/hashlib` to where you need it.
-However, it is recommended to embed smtplib as a subproject in your project, or install it first and then import it via CMake's `find_package`.
+However, it is recommended to embed hashlib as a subproject in your project, or install it first and then import it via CMake's `find_package`.
 ```cmake
 find_package(hashlib REQUIRED)
 target_link_libraries(<your-target> hashlib::hashlib)
