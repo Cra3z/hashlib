@@ -155,43 +155,43 @@ namespace hashlib {
         struct is_contiguous_range_impl<T, enable_if_t<
             is_range_impl<T, std::random_access_iterator_tag>::value &&
             std::is_same<
-                decltype(detail::data(std::declval<T&>())),
+                decltype(data(std::declval<T&>())), // use ADL
                 add_pointer_t<iter_reference_t<range_iter_t<T>>>
             >::value
         >> : std::true_type {};
 
         template<typename T>
-        using is_output_iterator = detail::is_iterator_impl<T, std::output_iterator_tag>;
+        using is_output_iterator = is_iterator_impl<T, std::output_iterator_tag>;
 
         template<typename T>
-        using is_input_iterator = detail::is_iterator_impl<T, std::input_iterator_tag>;
+        using is_input_iterator = is_iterator_impl<T, std::input_iterator_tag>;
 
         template<typename T>
-        using is_forward_iterator = detail::is_iterator_impl<T, std::forward_iterator_tag>;
+        using is_forward_iterator = is_iterator_impl<T, std::forward_iterator_tag>;
 
         template<typename T>
-        using is_bidirectional_iterator = detail::is_iterator_impl<T, std::bidirectional_iterator_tag>;
+        using is_bidirectional_iterator = is_iterator_impl<T, std::bidirectional_iterator_tag>;
 
         template<typename T>
-        using is_random_access_iterator = detail::is_iterator_impl<T, std::random_access_iterator_tag>;
+        using is_random_access_iterator = is_iterator_impl<T, std::random_access_iterator_tag>;
 
         template<typename T, typename It>
-        using is_sentinel_for = detail::is_sentinel_for_impl<T, It>;
+        using is_sentinel_for = is_sentinel_for_impl<T, It>;
 
         template<typename T>
-        using is_input_range = detail::is_range_impl<T, std::input_iterator_tag>;
+        using is_input_range = is_range_impl<T, std::input_iterator_tag>;
 
         template<typename T>
-        using is_forward_range = detail::is_range_impl<T, std::forward_iterator_tag>;
+        using is_forward_range = is_range_impl<T, std::forward_iterator_tag>;
 
         template<typename T>
-        using is_bidirectional_range = detail::is_range_impl<T, std::bidirectional_iterator_tag>;
+        using is_bidirectional_range = is_range_impl<T, std::bidirectional_iterator_tag>;
 
         template<typename T>
-        using is_random_access_range = detail::is_range_impl<T, std::random_access_iterator_tag>;
+        using is_random_access_range = is_range_impl<T, std::random_access_iterator_tag>;
 
         template<typename T>
-        using is_contiguous_range = detail::is_contiguous_range_impl<T>;
+        using is_contiguous_range = is_contiguous_range_impl<T>;
 
 #ifdef __cpp_lib_endian
         using std::endian;
@@ -209,7 +209,7 @@ namespace hashlib {
         };
 #endif
 
-        static_assert(endian::native == endian::big || endian::native == endian::little, "unsupported mixed-endian");
+        static_assert(endian::native == endian::big || endian::native == endian::little, "unsupported mixed-endian.");
 
         constexpr auto is_little_endian() noexcept -> bool {
             return endian::native == endian::little;

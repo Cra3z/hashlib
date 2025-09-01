@@ -47,13 +47,13 @@ namespace hashlib {
                     buffer_size_ += to_copy;
                     i += to_copy;
                     if (buffer_size_ == 128) {
-                        process_block_(buffer_.data());
+                        process_(w_table_(buffer_.data()));
                         buffer_size_ = 0;
                     }
                 }
 
                 for (; i + 127 < bytes_count; i += 128) {
-                    process_block_(reinterpret_cast<const byte*>(&first[i]));
+                    (process_)((w_table_)(std::next(first, i)));
                 }
 
                 if (i < bytes_count) {
@@ -104,7 +104,7 @@ namespace hashlib {
             }
 
         private:
-            auto process_block_(const byte* block) noexcept -> void {
+            auto process_(const std::array<std::uint64_t, 80>& w) noexcept -> void {
                 static constexpr std::uint64_t k[80] = {
                     0x428a2f98d728ae22ull, 0x7137449123ef65cdull, 0xb5c0fbcfec4d3b2full, 0xe9b5dba58189dbbcull,
                     0x3956c25bf348b538ull, 0x59f111f1b605d019ull, 0x923f82a4af194f9bull, 0xab1c5ed5da6d8118ull,
@@ -127,25 +127,6 @@ namespace hashlib {
                     0x28db77f523047d84ull, 0x32caab7b40c72493ull, 0x3c9ebe0a15c9bebcull, 0x431d67c49c100d4cull,
                     0x4cc5d4becb3e42b6ull, 0x597f299cfc657e2aull, 0x5fcb6fab3ad6faecull, 0x6c44198c4a475817ull
                 };
-
-                std::uint64_t w[80];
-
-                for (std::size_t i = 0; i < 16; ++i) {
-                    w[i] = (std::uint64_t(block[i * 8]) << 56) |
-                           (std::uint64_t(block[i * 8 + 1]) << 48) |
-                           (std::uint64_t(block[i * 8 + 2]) << 40) |
-                           (std::uint64_t(block[i * 8 + 3]) << 32) |
-                           (std::uint64_t(block[i * 8 + 4]) << 24) |
-                           (std::uint64_t(block[i * 8 + 5]) << 16) |
-                           (std::uint64_t(block[i * 8 + 6]) << 8) |
-                           (std::uint64_t(block[i * 8 + 7]));
-                }
-
-                for (std::size_t i = 16; i < 80; ++i) {
-                    const auto s0 = rotr64(w[i-15], 1) ^ rotr64(w[i-15], 8) ^ (w[i-15] >> 7);
-                    const auto s1 = rotr64(w[i-2], 19) ^ rotr64(w[i-2], 61) ^ (w[i-2] >> 6);
-                    w[i] = w[i-16] + s0 + w[i-7] + s1;
-                }
 
                 auto a = h_[0], b = h_[1], c = h_[2], d = h_[3],
                      e = h_[4], f = h_[5], g = h_[6], h = h_[7];
@@ -176,6 +157,28 @@ namespace hashlib {
                 h_[5] += f;
                 h_[6] += g;
                 h_[7] += h;
+            }
+
+            template<typename RandomAccessIt>
+            static auto w_table_(RandomAccessIt it) noexcept -> std::array<std::uint64_t, 80> {
+                static_assert(is_random_access_iterator<RandomAccessIt>::value, "unexpected");
+                std::array<std::uint64_t, 80> w; // NOLINT(*-pro-type-member-init)
+                for (std::size_t i = 0; i < 16; ++i) {
+                    w[i] = (std::uint64_t(it[i * 8]) << 56) |
+                           (std::uint64_t(it[i * 8 + 1]) << 48) |
+                           (std::uint64_t(it[i * 8 + 2]) << 40) |
+                           (std::uint64_t(it[i * 8 + 3]) << 32) |
+                           (std::uint64_t(it[i * 8 + 4]) << 24) |
+                           (std::uint64_t(it[i * 8 + 5]) << 16) |
+                           (std::uint64_t(it[i * 8 + 6]) << 8) |
+                           (std::uint64_t(it[i * 8 + 7]));
+                }
+                for (std::size_t i = 16; i < 80; ++i) {
+                    const auto s0 = rotr64(w[i-15], 1) ^ rotr64(w[i-15], 8) ^ (w[i-15] >> 7);
+                    const auto s1 = rotr64(w[i-2], 19) ^ rotr64(w[i-2], 61) ^ (w[i-2] >> 6);
+                    w[i] = w[i-16] + s0 + w[i-7] + s1;
+                }
+                return w;
             }
 
             HASHLIB_ALWAYS_INLINE

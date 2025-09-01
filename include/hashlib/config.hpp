@@ -7,7 +7,7 @@
 #endif
 #endif
 
-#define HASHLIB_VERSION "1.0.0"
+#define HASHLIB_VERSION "1.1.0"
 
 #ifdef _MSVC_LANG
 #define HASHLIB_CXX_STANDARD _MSVC_LANG
@@ -78,8 +78,12 @@
 #define HASHLIB_CXX17_INLINE
 #endif
 
+#ifdef __has_cpp_attribute
 #if __has_cpp_attribute(nodiscard)
 #define HASHLIB_NODISCARD [[nodiscard]]
+#else
+#define HASHLIB_NODISCARD
+#endif
 #else
 #define HASHLIB_NODISCARD
 #endif

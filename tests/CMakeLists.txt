@@ -23,4 +23,10 @@ foreach(EXAMPLE_FILE ${EXAMPLE_FILES})
         PRIVATE
         -DHASHLIB_TEST_DIR="${CMAKE_CURRENT_LIST_DIR}"
     )
+
+    target_compile_options(
+        ${EXAMPLE_FILE_NAME}
+        PRIVATE
+        $<$<CXX_COMPILER_ID:GNU>:-fsanitize=address,undefined -fno-omit-frame-pointer>
+    )
 endforeach()

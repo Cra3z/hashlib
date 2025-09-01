@@ -47,13 +47,13 @@ namespace hashlib {
                     buffer_size_ += to_copy;
                     i += to_copy;
                     if (buffer_size_ == 64) {
-                        process_block_(buffer_.data());
+                        process_(w_table_(buffer_.data()));
                         buffer_size_ = 0;
                     }
                 }
 
                 for (; i + 63 < bytes_count; i += 64) {
-                    (process_block_)(reinterpret_cast<const byte*>(&first[i])); // NOLINT(bugprone-bitwise-pointer-cast)
+                    (process_)((w_table_)(std::next(first, i)));
                 }
 
                 if (i < bytes_count) {
@@ -89,7 +89,7 @@ namespace hashlib {
             }
 
         private:
-            auto process_block_(const byte* block) noexcept -> void {
+            auto process_(const std::array<std::uint32_t, 16>& w) noexcept -> void {
                 static constexpr std::uint32_t K[64]{
                     0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
                     0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
@@ -111,10 +111,6 @@ namespace hashlib {
                 static constexpr std::uint32_t S[16]{7, 12, 17, 22, 5, 9, 14, 20, 4, 11, 16, 23, 6, 10, 15, 21};
 
                 std::uint32_t a = a_, b = b_, c = c_, d = d_;
-                std::uint32_t M[16];
-                for (std::size_t i = 0; i < 16; ++i) {
-                    M[i] = byte4_to_uint32_(block + i * 4);
-                }
                 for (std::size_t i = 0; i < 64; ++i) {
                     std::uint32_t F, g, cnt;
                     if (i < 16) {
@@ -137,7 +133,7 @@ namespace hashlib {
                         g = (7 * i) % 16;
                         cnt = S[12 + i % 4];
                     }
-                    F = F + a + K[i] + M[g];
+                    F = F + a + K[i] + w[g];
                     a = d;
                     d = c;
                     c = b;
@@ -149,10 +145,17 @@ namespace hashlib {
                 d_ += d;
             }
 
-            HASHLIB_ALWAYS_INLINE
-            HASHLIB_CXX17_CONSTEXPR static auto byte4_to_uint32_(const byte* bytes) noexcept -> std::uint32_t {
-                return std::uint32_t(bytes[0]) | (std::uint32_t(bytes[1]) << 8) |
-                    (std::uint32_t(bytes[2]) << 16) | (std::uint32_t(bytes[3]) << 24);
+            template<typename RandomAccessIt>
+            static auto w_table_(RandomAccessIt it) noexcept -> std::array<std::uint32_t, 16> {
+                static_assert(is_random_access_iterator<RandomAccessIt>::value, "unexpected");
+                std::array<std::uint32_t, 16> w; // NOLINT(*-pro-type-member-init)
+                for (std::size_t i = 0; i < 16; ++i) {
+                    w[i] = (std::uint32_t(it[i * 4])) |
+                           (std::uint32_t(it[i * 4 + 1]) << 8) |
+                           (std::uint32_t(it[i * 4 + 2]) << 16) |
+                           (std::uint32_t(it[i * 4 + 3]) << 24);
+                }
+                return w;
             }
 
         private:

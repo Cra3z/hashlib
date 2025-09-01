@@ -49,13 +49,13 @@ namespace hashlib {
                     buffer_size_ += to_copy;
                     i += to_copy;
                     if (buffer_size_ == 64) {
-                        process_block_(buffer_.data());
+                        process_(w_table_(buffer_.data()));
                         buffer_size_ = 0;
                     }
                 }
 
                 for (; i + 63 < bytes_count; i += 64) {
-                    process_block_(reinterpret_cast<const byte*>(&first[i]));
+                    (process_)((w_table_)(std::next(first, i)));
                 }
 
                 if (i < bytes_count) {
@@ -94,21 +94,7 @@ namespace hashlib {
             }
 
         private:
-            auto process_block_(const byte* block) noexcept -> void {
-                std::uint32_t w[80];
-
-                for (std::size_t i = 0; i < 16; ++i) {
-                    w[i] = (std::uint32_t(block[i * 4]) << 24) |
-                           (std::uint32_t(block[i * 4 + 1]) << 16) |
-                           (std::uint32_t(block[i * 4 + 2]) << 8) |
-                           (std::uint32_t(block[i * 4 + 3]));
-                }
-
-                for (std::size_t i = 16; i < 80; ++i) {
-                    const auto temp = w[i-3] ^ w[i-8] ^ w[i-14] ^ w[i-16];
-                    w[i] = rotl32(temp, 1);
-                }
-
+            auto process_(const std::array<std::uint32_t, 80>& w) noexcept -> void {
                 auto a = h_[0], b = h_[1], c = h_[2], d = h_[3], e = h_[4];
 
                 for (std::size_t i = 0; i < 80; ++i) {
@@ -141,6 +127,24 @@ namespace hashlib {
                 h_[2] += c;
                 h_[3] += d;
                 h_[4] += e;
+            }
+
+            template<typename RandomAccessIt>
+            static auto w_table_(RandomAccessIt it) noexcept -> std::array<std::uint32_t, 80> {
+                static_assert(is_random_access_iterator<RandomAccessIt>::value, "unexpected");
+                std::array<std::uint32_t, 80> w; // NOLINT(*-pro-type-member-init)
+                for (std::size_t i = 0; i < 16; ++i) {
+                    w[i] = (std::uint32_t(it[i * 4]) << 24) |
+                           (std::uint32_t(it[i * 4 + 1]) << 16) |
+                           (std::uint32_t(it[i * 4 + 2]) << 8) |
+                           (std::uint32_t(it[i * 4 + 3]));
+                }
+                for (std::size_t i = 16; i < 80; ++i) {
+                    const auto temp = w[i-3] ^ w[i-8] ^ w[i-14] ^ w[i-16];
+                    w[i] = rotl32(temp, 1);
+                }
+
+                return w;
             }
 
             HASHLIB_ALWAYS_INLINE
