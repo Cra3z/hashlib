@@ -6,7 +6,8 @@ target_directory = "tests/files"
 
 if __name__ == '__main__':
     characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    for algorithm_name in ["md5", "sha1", "sha224", "sha256", "sha384", "sha512"]:
+    algorithms = ["md5", "sha1", "sha224", "sha256", "sha384", "sha512", "sha3_224", "sha3_256", "sha3_384", "sha3_512"]
+    for algorithm_name in algorithms:
         for _ in range(8):
             content = b''
             for i in range(random.randint(1, 100)):
