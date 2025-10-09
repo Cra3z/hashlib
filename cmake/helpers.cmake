@@ -27,7 +27,7 @@ function(hashlib_generate_single_header)
 #include <utility>
 "
     )
-    set(HEADERS config.hpp core.hpp md5.hpp sha1.hpp sha224_and_sha256.hpp sha384_and_sha512.hpp)
+    set(HEADERS config.hpp core.hpp md5.hpp sha1.hpp sha224_and_sha256.hpp sha384_and_sha512.hpp sha3.hpp)
     foreach(HEADER IN LISTS HEADERS)
         file(READ "${PROJECT_SOURCE_DIR}/include/hashlib/${HEADER}" _CONTENT)
         file(APPEND ${OUTPUT_FILE} "${_CONTENT}\n")
@@ -46,7 +46,7 @@ export module hashlib;
 export import std;
 "
     )
-    set(HEADERS config.hpp core.hpp md5.hpp sha1.hpp sha224_and_sha256.hpp sha384_and_sha512.hpp)
+    set(HEADERS config.hpp core.hpp md5.hpp sha1.hpp sha224_and_sha256.hpp sha384_and_sha512.hpp sha3.hpp)
     foreach(HEADER IN LISTS HEADERS)
         file(READ "${PROJECT_SOURCE_DIR}/include/hashlib/${HEADER}" _CONTENT)
         file(APPEND ${OUTPUT_FILE} "${_CONTENT}\n")

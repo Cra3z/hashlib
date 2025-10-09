@@ -1,5 +1,5 @@
 #include <deque>
-#include <hashlib/sha3.h>
+#include <hashlib/sha3.hpp>
 #include "common.h"
 
 TEST_CASE("testing sha3_512") {
