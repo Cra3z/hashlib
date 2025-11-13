@@ -7,7 +7,7 @@
 #endif
 #endif
 
-#define HASHLIB_VERSION "1.1.0"
+#define HASHLIB_VERSION "1.1.1"
 
 #ifdef _MSVC_LANG
 #define HASHLIB_CXX_STANDARD _MSVC_LANG

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.22)
 
 project(
     hashlib
-    VERSION 1.1.0
+    VERSION 1.1.1
     DESCRIPTION "A C++ header-only hash algorithm library"
     LANGUAGES CXX
 )
@@ -23,6 +23,31 @@ include(cmake/helpers.cmake)
 add_library(
     ${PROJECT_NAME}
     INTERFACE
+)
+
+add_library(
+    ${PROJECT_NAME}::${PROJECT_NAME}
+    ALIAS
+    ${PROJECT_NAME}
+)
+
+set(
+    HASHLIB_PUBLIC_HEADERS
+    "${PROJECT_SOURCE_DIR}/include/hashlib/config.hpp"
+    "${PROJECT_SOURCE_DIR}/include/hashlib/core.hpp"
+    "${PROJECT_SOURCE_DIR}/include/hashlib/md5.hpp"
+    "${PROJECT_SOURCE_DIR}/include/hashlib/sha1.hpp"
+    "${PROJECT_SOURCE_DIR}/include/hashlib/sha2.hpp"
+    "${PROJECT_SOURCE_DIR}/include/hashlib/sha3.hpp"
+)
+
+target_sources(
+    ${PROJECT_NAME}
+    INTERFACE
+    FILE_SET hashlib_public_headers
+    TYPE HEADERS
+    BASE_DIRS ${PROJECT_SOURCE_DIR}/include
+    FILES ${HASHLIB_PUBLIC_HEADERS}
 )
 
 target_include_directories(
@@ -48,7 +73,7 @@ install(
 install(
     TARGETS ${PROJECT_NAME}
     EXPORT ${PROJECT_NAME}-targets
-    DESTINATION ${PROJECT_NAME}/lib/${CMAKE_BUILD_TYPE}
+    FILE_SET hashlib_public_headers DESTINATION ${PROJECT_NAME}/include
 )
 
 install(
@@ -58,14 +83,29 @@ install(
     DESTINATION ${PROJECT_NAME}/lib/cmake/${PROJECT_NAME}
 )
 
+export(
+    EXPORT ${PROJECT_NAME}-targets
+    NAMESPACE ${PROJECT_NAME}::
+    FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-targets.cmake
+)
+
 configure_package_config_file(
     ${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME}-config.cmake.in
     ${PROJECT_NAME}-config.cmake
     INSTALL_DESTINATION ${PROJECT_NAME}/lib/cmake/${PROJECT_NAME}
 )
 
+write_basic_package_version_file(
+    ${PROJECT_NAME}-config-version.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY AnyNewerVersion
+    ARCH_INDEPENDENT
+)
+
 install(
-    FILES ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
+    FILES
+    ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
+    ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
     DESTINATION ${PROJECT_NAME}/lib/cmake/${PROJECT_NAME}
 )
 

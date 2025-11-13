@@ -78,6 +78,12 @@ cmake -S . -B <your-build-dir> -DHASHLIB_BUILD_SINGLE_HEADER=ON
 cmake -S . -B <your-build-dir> -DHASHLIB_BUILD_MODULE=ON
 ```
 
+### 使用conan包管理器
+你可以通过[conan 包管理器](https://github.com/conan-io)安装hashlib.
+```shell
+conan install --requires=hashlib/[*]
+```
+
 ## 示例
 
 * 使用 `hashlib::md5` 获取字符串的 md5 值

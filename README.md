@@ -78,6 +78,12 @@ using the following command, the module file `hashlib.cppm` will be generated in
 cmake -S . -B <your-build-dir> -DHASHLIB_BUILD_MODULE=ON
 ```
 
+### using conan package manager
+You can also install hashlib by [conan package manager](https://github.com/conan-io).
+```shell
+conan install --requires=hashlib/[*]
+```
+
 ## Examples
 
 * get md5 of a string by using `hashlib::md5`

@@ -1,5 +1,5 @@
 #include <deque>
-#include <hashlib/sha224_and_sha256.hpp>
+#include <hashlib/sha2.hpp>
 #include "common.h"
 
 TEST_CASE("testing sha224") {

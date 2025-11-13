@@ -7,6 +7,7 @@
 /bin/
 /build/
 /out/
+/test_package/build/
 
 # unrelated files
 CMakeSettings.json
