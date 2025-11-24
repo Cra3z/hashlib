@@ -66,11 +66,6 @@ if (HASHLIB_BUILD_SINGLE_HEADER)
 endif()
 
 install(
-    DIRECTORY ${PROJECT_SOURCE_DIR}/include
-    DESTINATION ${PROJECT_NAME}
-)
-
-install(
     TARGETS ${PROJECT_NAME}
     EXPORT ${PROJECT_NAME}-targets
     FILE_SET hashlib_public_headers DESTINATION ${PROJECT_NAME}/include
