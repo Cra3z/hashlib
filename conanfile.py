@@ -4,7 +4,7 @@ from conan.tools.cmake import CMake, cmake_layout
 
 class HashlibRecipe(ConanFile):
     name = "hashlib"
-    version = "1.1.1"
+    version = "1.1.2"
     author = "Cra3z"
     description = "A C++ header-only hash algorithm library"
     topics = ("header-only", "hash", "sha", "md5")
@@ -48,7 +48,7 @@ class HashlibRecipe(ConanFile):
         self.cpp_info.set_property("cmake_file_name", "hashlib")
         self.cpp_info.set_property("cmake_target_name", "hashlib::hashlib")
         self.cpp_info.libs = []
-        self.cpp_info.includedirs = ["hashlib/include"]
+        self.cpp_info.includedirs = ["include"]
 
     def package_id(self):
         self.info.clear()

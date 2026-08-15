@@ -62,7 +62,7 @@ cmake --install <your-build-dir> --prefix <your-install-dir>
 
 | 选项 | 默认值 | 说明 |
 |------|--------|------|
-| HASHLIB_TESTS | ON | 启用测试 |
+| HASHLIB_TESTS | 顶层构建时 ON，作为子项目时 OFF | 启用测试 |
 | HASHLIB_BUILD_SINGLE_HEADER | OFF | 生成单一头文件 |
 | HASHLIB_BUILD_MODULE | OFF | 生成 C++20 模块 |
 
@@ -76,6 +76,20 @@ cmake -S . -B <your-build-dir> -DHASHLIB_BUILD_SINGLE_HEADER=ON
 使用以下命令, 将在构建目录中生成模块文件 `hashlib.cppm`.
 ```shell
 cmake -S . -B <your-build-dir> -DHASHLIB_BUILD_MODULE=ON
+```
+
+### 使用 CPM
+你可以在你的`CMakeLists.txt`中使用 [CPM](https://github.com/cpm-cmake/CPM.cmake) 来自动获取和配置`hashlib`:
+```cmake
+CPMAddPackage(
+    NAME hashlib
+    GITHUB_REPOSITORY Cra3z/hashlib
+    GIT_TAG v1.1.2
+    OPTIONS
+    "HASHLIB_TESTS OFF"
+)
+
+target_link_libraries(<your-target> PRIVATE hashlib::hashlib)
 ```
 
 ### 使用conan包管理器

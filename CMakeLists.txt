@@ -2,18 +2,20 @@ cmake_minimum_required(VERSION 3.22)
 
 project(
     hashlib
-    VERSION 1.1.1
+    VERSION 1.1.2
     DESCRIPTION "A C++ header-only hash algorithm library"
     LANGUAGES CXX
 )
 
 set(CMAKE_CXX_STANDARD 11)
 
+include(GNUInstallDirs)
+
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/permissive->")
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/Zc:preprocessor>")
 
-option(HASHLIB_TESTS "enable tests for hashlib" ON)
+option(HASHLIB_TESTS "enable tests for hashlib" ${PROJECT_IS_TOP_LEVEL})
 option(HASHLIB_BUILD_SINGLE_HEADER "generate hashlib single header" OFF)
 option(HASHLIB_BUILD_MODULE "generate hashlib cxx20 module" OFF)
 
@@ -54,7 +56,7 @@ target_include_directories(
     ${PROJECT_NAME}
     INTERFACE
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:${PROJECT_NAME}/include>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
 if (HASHLIB_BUILD_MODULE)
@@ -68,14 +70,14 @@ endif()
 install(
     TARGETS ${PROJECT_NAME}
     EXPORT ${PROJECT_NAME}-targets
-    FILE_SET hashlib_public_headers DESTINATION ${PROJECT_NAME}/include
+    FILE_SET hashlib_public_headers DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
 install(
     EXPORT ${PROJECT_NAME}-targets
     FILE ${PROJECT_NAME}-targets.cmake
     NAMESPACE ${PROJECT_NAME}::
-    DESTINATION ${PROJECT_NAME}/lib/cmake/${PROJECT_NAME}
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 )
 
 export(
@@ -87,7 +89,7 @@ export(
 configure_package_config_file(
     ${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME}-config.cmake.in
     ${PROJECT_NAME}-config.cmake
-    INSTALL_DESTINATION ${PROJECT_NAME}/lib/cmake/${PROJECT_NAME}
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 )
 
 write_basic_package_version_file(
@@ -101,7 +103,7 @@ install(
     FILES
     ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
     ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
-    DESTINATION ${PROJECT_NAME}/lib/cmake/${PROJECT_NAME}
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 )
 
 if (HASHLIB_TESTS)
